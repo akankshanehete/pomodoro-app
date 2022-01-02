@@ -10,22 +10,42 @@ FONT_NAME = "Courier"
 WORK_MIN = 25
 SHORT_BREAK_MIN = 5
 LONG_BREAK_MIN = 20
+reps = 0
 
 # ---------------------------- TIMER RESET ------------------------------- # 
 
 # ---------------------------- TIMER MECHANISM ------------------------------- # 
 
-# ---------------------------- COUNTDOWN MECHANISM ------------------------------- # 
-def countdown(count):
+# ---------------------------- COUNTDOWN MECHANISM ------------------------------- #
 
+
+def countdown(count):
     count_min = math.floor(count / 60)
     count_sec = count % 60
+    if count_sec < 10:
+        count_sec = '0' + str(count_sec)
     canvas.itemconfig(timer_text, text=str(count_min) + ":" + str(count_sec))
     if count > 0:
         window.after(1000, countdown, count - 1)
-def start_timer():
-    countdown(WORK_MIN*60)
+    else:
+        start_timer()
 
+def start_timer():
+    global reps
+    reps += 1
+    work_sec = WORK_MIN*60
+    shortbreak_sec = SHORT_BREAK_MIN*60
+    longbreak_sec = LONG_BREAK_MIN*60
+
+    if reps % 2 == 1:
+        header_lb.config(text='Work!!!')
+        countdown(work_sec)
+    elif reps % 8 == 0:
+        header_lb.config(text='Long Break', fg=RED)
+        countdown(longbreak_sec)
+    else:
+        header_lb.config(text='Short Break', fg=PINK)
+        countdown(shortbreak_sec)
 
 
 # ---------------------------- UI SETUP ------------------------------- #
